@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202605011220"
+      author: "dragan.bjelica"
+      context: dev
+      changes:
+        - sqlFile:
+            path: classpath:liquibase/versions/v1.1.0/seeds/dev/init_worker.sql

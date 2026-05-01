@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 @Repository
-public interface OverburdenReportRepository extends JpaRepository<OverburdenReportEntity, Long>,
+public interface OverburdenReportRepository extends JpaRepository<OverburdenReportEntity, Integer>,
     JpaSpecificationExecutor<OverburdenReportEntity> {
 
   @Query("""
           SELECT DISTINCT r
-          FROM OverburdenReport r
+          FROM OverburdenReportEntity r
           JOIN r.entries e
           JOIN e.machineEntity m
           JOIN e.workerEntity w

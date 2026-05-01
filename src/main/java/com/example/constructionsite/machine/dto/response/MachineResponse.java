@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MachineResponse {
-  private Long id;
+  private Integer id;
   private String name;
+  private Boolean isActive;
 }

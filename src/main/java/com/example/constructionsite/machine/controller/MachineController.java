@@ -25,7 +25,7 @@ public class MachineController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<MachineResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<MachineResponse> getById(@PathVariable Integer id) {
     return ResponseEntity.ok(machineService.findMachineById(id));
   }
 
@@ -35,12 +35,13 @@ public class MachineController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<MachineResponse> update(@PathVariable Long id, @RequestBody MachineRequest machineRequest) {
+  public ResponseEntity<MachineResponse> update(@PathVariable Integer id,
+                                                @RequestBody MachineRequest machineRequest) {
     return ResponseEntity.ok(machineService.updateMachine(id, machineRequest));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
     machineService.deleteMachine(id);
     return ResponseEntity.noContent().build();
   }

@@ -17,9 +17,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MachineEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "machine_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+      name = "machine_id_seq",
+      sequenceName = "machine_id_seq",
+      allocationSize = 1
+  )
+  private Integer id;
 
   @Column(nullable = false, unique = true)
   private String name;
+
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true;
 }

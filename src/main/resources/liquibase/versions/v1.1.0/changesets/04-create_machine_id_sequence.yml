@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202604061030"
+      author: "dragan.bjelica"
+      changes:
+        - createSequence:
+            sequenceName: "machine_id_seq"
+            startValue: 1
+            incrementBy: 1

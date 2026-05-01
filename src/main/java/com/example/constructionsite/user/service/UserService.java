@@ -1,5 +1,6 @@
 package com.example.constructionsite.user.service;
 
+import com.example.constructionsite.security.JwtService;
 import com.example.constructionsite.user.dto.request.LoginRequest;
 import com.example.constructionsite.user.dto.request.RegisterRequest;
 import com.example.constructionsite.user.dto.response.LoginResponse;
@@ -8,7 +9,6 @@ import com.example.constructionsite.user.entity.UserEntity;
 import com.example.constructionsite.user.enumeration.UserRoles;
 import com.example.constructionsite.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import main.java.com.example.constructionsite.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

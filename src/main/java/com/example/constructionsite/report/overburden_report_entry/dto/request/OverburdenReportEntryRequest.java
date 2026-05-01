@@ -8,8 +8,8 @@ import java.time.LocalTime;
 
 @Data
 public class OverburdenReportEntryRequest {
-  private Long workerId;
-  private Long machineId;
+  private Integer workerId;
+  private Integer machineId;
   private Integer tripCount;
   private BigDecimal kilometers;
   private BigDecimal machineHours;

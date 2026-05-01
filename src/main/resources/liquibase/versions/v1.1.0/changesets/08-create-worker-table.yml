@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202605011215"
+      author: "dragan.bjelica"
+      changes:
+        - createTable:
+            tableName: workers
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+        - createSequence:
+            sequenceName: worker_id_seq
+            startValue: 1
+            incrementBy: 1
+
+        - addUniqueConstraint:
+            tableName: workers
+            columnNames: first_name, last_name
+            constraintName: uk_worker_fullname
+
+        - createIndex:
+            tableName: workers
+            indexName: idx_worker_fullname
+            columns:
+              - column:
+                  name: first_name
+              - column:
+                  name: last_name

@@ -26,7 +26,7 @@ public class WorkerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<WorkerResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<WorkerResponse> getById(@PathVariable Integer id) {
     return ResponseEntity.ok(workerService.findWorkerById(id));
   }
 
@@ -36,14 +36,13 @@ public class WorkerController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<WorkerResponse> update(
-      @PathVariable Long id,
-      @Valid @RequestBody WorkerRequest workerRequest) {
+  public ResponseEntity<WorkerResponse> update(@PathVariable Integer id,
+                                               @Valid @RequestBody WorkerRequest workerRequest) {
     return ResponseEntity.ok(workerService.updateWorker(id, workerRequest));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
     workerService.deleteWorker(id);
     return ResponseEntity.noContent().build();
   }

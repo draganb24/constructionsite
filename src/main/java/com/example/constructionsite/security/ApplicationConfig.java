@@ -1,7 +1,7 @@
 package com.example.constructionsite.security;
 
+import com.example.constructionsite.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import main.java.com.example.constructionsite.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

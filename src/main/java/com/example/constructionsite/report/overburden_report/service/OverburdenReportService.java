@@ -149,12 +149,12 @@ public class OverburdenReportService {
         .divide(tons, 4, RoundingMode.HALF_UP);
   }
 
-  public OverburdenReportResponse findOverburdenReportById(Long id) {
+  public OverburdenReportResponse findOverburdenReportById(Integer id) {
     OverburdenReportEntity overburdenReportEntity = findOverburdenReportByIdOrThrow(id);
     return buildOverburdenReportResponse(overburdenReportEntity);
   }
 
-  private OverburdenReportEntity findOverburdenReportByIdOrThrow(Long id) {
+  private OverburdenReportEntity findOverburdenReportByIdOrThrow(Integer id) {
     return overburdenReportRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Izvještaj nije pronađen, id: " + id));
   }
@@ -214,7 +214,7 @@ public class OverburdenReportService {
     return entry;
   }
 
-  public OverburdenReportResponse updateOverburdenReport(Long id, OverburdenReportRequest request) {
+  public OverburdenReportResponse updateOverburdenReport(Integer id, OverburdenReportRequest request) {
     OverburdenReportEntity existingOverburdenReportEntity = findOverburdenReportByIdOrThrow(id);
 
     existingOverburdenReportEntity.setReportDate(request.getReportDate());
@@ -235,7 +235,7 @@ public class OverburdenReportService {
     return buildOverburdenReportResponse(overburdenReportRepository.save(existingOverburdenReportEntity));
   }
 
-  public void deleteOverburdenReport(Long id) {
+  public void deleteOverburdenReport(Integer id) {
     OverburdenReportEntity report = findOverburdenReportByIdOrThrow(id);
     overburdenReportRepository.delete(report);
   }

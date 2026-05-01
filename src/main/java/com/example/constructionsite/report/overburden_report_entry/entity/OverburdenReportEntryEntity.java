@@ -18,8 +18,13 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class OverburdenReportEntryEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "overburden_report_entry_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+      name = "overburden_report_entry_id_seq",
+      sequenceName = "overburden_report_entry_id_seq",
+      allocationSize = 1
+  )
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(
@@ -44,22 +49,31 @@ public class OverburdenReportEntryEntity {
   )
   private MachineEntity machineEntity;
 
+  @Column(name = "trip_count")
   private Integer tripCount;
 
+  @Column(name = "kilometers", precision = 10, scale = 2)
   private BigDecimal kilometers;
 
+  @Column(name = "machine_hours", precision = 10, scale = 2)
   private BigDecimal machineHours;
 
+  @Column(name = "fuel_consumption", precision = 10, scale = 2)
   private BigDecimal fuelConsumption;
 
+  @Column(name = "tons", precision = 10, scale = 2)
   private BigDecimal tons;
 
+  @Column(name = "km_per_tone", precision = 10, scale = 4)
   private BigDecimal kmPerTone;
 
+  @Column(name = "mh_per_tone", precision = 10, scale = 4)
   private BigDecimal mhPerTone;
 
+  @Column(name = "std_range")
   private String stdRange;
 
+  @Column(name = "note")
   private String note;
 
   @Column(name = "start_work_time")

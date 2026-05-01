@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class OverburdenReportResponse {
-  private Long id;
+  private Integer id;
   private LocalDate reportDate;
   private String description;
   private String note;

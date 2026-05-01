@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202605011225"
+      author: "dragan.bjelica"
+      changes:
+        - createSequence:
+            sequenceName: "overburden_report_id_seq"
+            startValue: 1
+            incrementBy: 1

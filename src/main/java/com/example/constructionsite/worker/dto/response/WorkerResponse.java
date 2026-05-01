@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkerResponse {
-  private Long id;
+  private Integer id;
   private String firstName;
   private String lastName;
+  private Boolean isActive;
 }

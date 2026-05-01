@@ -22,7 +22,7 @@ public class MachineService {
         .map(this::buildMachineResponse);
   }
 
-  public MachineResponse findMachineById(Long id) {
+  public MachineResponse findMachineById(Integer id) {
     MachineEntity machineEntity = machineRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Masina nije pronadjena, id: " + id));
     return buildMachineResponse(machineEntity);
@@ -54,7 +54,7 @@ public class MachineService {
     return machineEntity;
   }
 
-  public MachineResponse updateMachine(Long id, MachineRequest machineRequest) {
+  public MachineResponse updateMachine(Integer id, MachineRequest machineRequest) {
     MachineEntity existingMachineEntity = findMachineByIdOrThrow(id);
     ensureMachineNameIsUniqueForUpdate(existingMachineEntity, machineRequest.getName());
     existingMachineEntity.setName(machineRequest.getName());
@@ -62,7 +62,7 @@ public class MachineService {
     return buildMachineResponse(savedMachineEntity);
   }
 
-  private MachineEntity findMachineByIdOrThrow(Long id) {
+  private MachineEntity findMachineByIdOrThrow(Integer id) {
     return machineRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Mašina nije pronađena, id: " + id));
   }
@@ -73,7 +73,7 @@ public class MachineService {
     }
   }
 
-  public void deleteMachine(Long id) {
+  public void deleteMachine(Integer id) {
     MachineEntity machineEntity = findMachineByIdOrThrow(id);
     machineRepository.delete(machineEntity);
   }

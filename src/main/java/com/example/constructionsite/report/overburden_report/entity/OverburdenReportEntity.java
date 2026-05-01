@@ -17,13 +17,21 @@ import java.util.List;
 @AllArgsConstructor
 public class OverburdenReportEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "overburden_report_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+      name = "overburden_report_id_seq",
+      sequenceName = "overburden_report_id_seq",
+      allocationSize = 1
+  )
+  private Integer id;
 
+  @Column(name = "report_date", nullable = false)
   private LocalDate reportDate;
 
+  @Column(name = "description", length = 255)
   private String description;
 
+  @Column(name = "note", length = 500)
   private String note;
 
   @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)

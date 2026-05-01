@@ -40,7 +40,7 @@ public class OverburdenReportController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<OverburdenReportResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<OverburdenReportResponse> getById(@PathVariable Integer id) {
     return ResponseEntity.ok(overburdenReportService.findOverburdenReportById(id));
   }
 
@@ -51,14 +51,13 @@ public class OverburdenReportController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<OverburdenReportResponse> update(
-      @PathVariable Long id,
-      @Valid @RequestBody OverburdenReportRequest overburdenReportRequest) {
+  public ResponseEntity<OverburdenReportResponse> update(@PathVariable Integer id,
+                                                         @Valid @RequestBody OverburdenReportRequest overburdenReportRequest) {
     return ResponseEntity.ok(overburdenReportService.updateOverburdenReport(id, overburdenReportRequest));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
     overburdenReportService.deleteOverburdenReport(id);
     return ResponseEntity.noContent().build();
   }

@@ -30,12 +30,12 @@ public class WorkerService {
         .build();
   }
 
-  public WorkerResponse findWorkerById(Long id) {
+  public WorkerResponse findWorkerById(Integer id) {
     WorkerEntity workerEntity = findWorkerByIdOrThrow(id);
     return buildWorkerResponse(workerEntity);
   }
 
-  private WorkerEntity findWorkerByIdOrThrow(Long id) {
+  private WorkerEntity findWorkerByIdOrThrow(Integer id) {
     return workerRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Radnik nije pronađen, id: " + id));
   }
@@ -60,7 +60,7 @@ public class WorkerService {
     return workerEntity;
   }
 
-  public WorkerResponse updateWorker(Long id, WorkerRequest workerRequest) {
+  public WorkerResponse updateWorker(Integer id, WorkerRequest workerRequest) {
     WorkerEntity existingWorkerEntity = findWorkerByIdOrThrow(id);
     ensureWorkerNameIsUniqueForUpdate(existingWorkerEntity, workerRequest.getFirstName(), workerRequest.getLastName());
     existingWorkerEntity.setFirstName(workerRequest.getFirstName());
@@ -77,7 +77,7 @@ public class WorkerService {
     }
   }
 
-  public void deleteWorker(Long id) {
+  public void deleteWorker(Integer id) {
     WorkerEntity workerEntity = findWorkerByIdOrThrow(id);
     workerRepository.delete(workerEntity);
   }

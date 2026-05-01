@@ -28,8 +28,13 @@ import java.util.List;
 @Builder
 public class UserEntity implements UserDetails {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+      name = "user_id_seq",
+      sequenceName = "user_id_seq",
+      allocationSize = 1
+  )
+  private Integer id;
 
   @NotBlank(message = "Ime i prezime su obavezni")
   private String fullName;

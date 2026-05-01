@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202605011200"
+      author: "dragan.bjelica"
+      changes:
+        - createTable:
+            tableName: machines
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+        - createSequence:
+            sequenceName: machine_id_seq
+            startValue: 1
+            incrementBy: 1
+
+        - createIndex:
+            tableName: machines
+            indexName: idx_machine_name
+            columns:
+              - column:
+                  name: name

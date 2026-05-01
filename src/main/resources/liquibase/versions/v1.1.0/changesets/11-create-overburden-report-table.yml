@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: "202605011230"
+      author: "dragan.bjelica"
+      changes:
+
+        - createTable:
+            tableName: overburden_reports
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: report_date
+                  type: date
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: varchar(255)
+
+              - column:
+                  name: note
+                  type: varchar(500)
+
+        - createSequence:
+            sequenceName: overburden_report_id_seq
+            startValue: 1
+            incrementBy: 1
+
+        - createIndex:
+            tableName: overburden_reports
+            indexName: idx_overburden_reports_date
+            columns:
+              - column:
+                  name: report_date

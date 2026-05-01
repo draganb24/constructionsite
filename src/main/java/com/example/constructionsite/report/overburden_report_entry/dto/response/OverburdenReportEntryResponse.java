@@ -10,10 +10,10 @@ import java.time.LocalTime;
 @Data
 @Builder
 public class OverburdenReportEntryResponse {
-  private Long id;
-  private Long workerId;
+  private Integer id;
+  private Integer workerId;
   private String workerName;
-  private Long machineId;
+  private Integer machineId;
   private String machineName;
   private Integer tripCount;
   private BigDecimal kilometers;

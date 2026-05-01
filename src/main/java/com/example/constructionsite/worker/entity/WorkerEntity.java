@@ -21,14 +21,22 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 public class WorkerEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "worker_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+      name = "worker_id_seq",
+      sequenceName = "worker_id_seq",
+      allocationSize = 1
+  )
+  private Integer id;
 
   @Column(name = "first_name", nullable = false)
   private String firstName;
 
   @Column(name = "last_name", nullable = false)
   private String lastName;
+
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true;
 
   public String getFullName() {
     return Stream.of(firstName, lastName)
