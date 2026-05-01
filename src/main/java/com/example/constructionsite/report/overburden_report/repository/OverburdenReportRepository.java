@@ -16,15 +16,20 @@ public interface OverburdenReportRepository extends JpaRepository<OverburdenRepo
     JpaSpecificationExecutor<OverburdenReportEntity> {
 
   @Query("""
-          SELECT DISTINCT r
-          FROM OverburdenReportEntity r
-          JOIN r.entries e
-          JOIN e.machineEntity m
-          JOIN e.workerEntity w
-          WHERE (:machineId IS NULL OR m.id = :machineId)
-          AND (:workerId IS NULL OR w.id = :workerId)
-          AND r.reportDate >= COALESCE(:startDate, r.reportDate)
-          AND r.reportDate <= COALESCE(:endDate, r.reportDate)
+      SELECT r
+      FROM OverburdenReportEntity r
+      WHERE (:machineId IS NULL OR EXISTS (
+          SELECT 1
+          FROM OverburdenReportEntryEntity e
+          WHERE e.report = r AND e.machineEntity.id = :machineId
+      ))
+      AND (:workerId IS NULL OR EXISTS (
+          SELECT 1
+          FROM OverburdenReportEntryEntity e
+          WHERE e.report = r AND e.workerEntity.id = :workerId
+      ))
+      AND (:startDate IS NULL OR r.reportDate >= :startDate)
+      AND (:endDate IS NULL OR r.reportDate <= :endDate)
       """)
   Page<OverburdenReportEntity> findWithFilters(
       @Param("startDate") LocalDate startDate,

@@ -2,11 +2,8 @@ package com.example.constructionsite.user.service;
 
 import com.example.constructionsite.security.JwtService;
 import com.example.constructionsite.user.dto.request.LoginRequest;
-import com.example.constructionsite.user.dto.request.RegisterRequest;
 import com.example.constructionsite.user.dto.response.LoginResponse;
-import com.example.constructionsite.user.dto.response.RegisterResponse;
 import com.example.constructionsite.user.entity.UserEntity;
-import com.example.constructionsite.user.enumeration.UserRoles;
 import com.example.constructionsite.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,8 +20,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
   private final UserRepository userRepository;
-
-  private final PasswordEncoder passwordEncoder;
 
   private final AuthenticationManager authenticationManager;
 
@@ -46,24 +40,6 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  public RegisterResponse registerUser(RegisterRequest registerRequest) {
-    var user = UserEntity.builder()
-        .fullName(registerRequest.getFullName())
-        .email(registerRequest.getEmail())
-        .password(passwordEncoder.encode(registerRequest.getPassword()))
-        .userRole(UserRoles.USER)
-        .build();
-
-    userRepository.save(user);
-
-    var jwtToken = jwtService.generateToken(user);
-
-    return RegisterResponse.builder()
-        .token(jwtToken)
-        .userEntity(user)
-        .build();
-  }
-
   public LoginResponse loginUser(LoginRequest loginRequest) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
@@ -80,13 +56,5 @@ public class UserService implements UserDetailsService {
         .token(jwtToken)
         .userEntity(user)
         .build();
-  }
-
-  public UserEntity updateUserRoleToAdmin(Long userId) {
-    UserEntity userEntity = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("Korisnik nije pronađen"));
-
-    userEntity.setUserRole(UserRoles.ADMIN);
-    return userRepository.save(userEntity);
   }
 }
