@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/constructionsite
+    username: dev
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    contexts: dev
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect

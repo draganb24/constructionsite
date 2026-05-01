@@ -1,0 +1,34 @@
+#spring.application.name=constructionsite
+
+
+server:
+  error:
+    include-message: always
+    include-binding-error: always
+
+spring:
+  datasource:
+    password: sifrazapostgresql
+    url: jdbc:postgresql://localhost:5432/constructionsite
+    username: postgres
+
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILES:dev}
+
+  liquibase:
+    change-log: classpath:liquibase/master.yml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+jwt:
+  secret-key: "02ab7b736a191b264e58ab3709fd2bb0674601e4ee44a3e16c7964ff2ba21c87"
+
+
+
