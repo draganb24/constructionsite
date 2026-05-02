@@ -17,64 +17,66 @@ public class MachineService {
 
   private final MachineRepository machineRepository;
 
-  public Page<MachineResponse> findAllMachines(Pageable pageable) {
-    return machineRepository.findAll(pageable)
-        .map(this::buildMachineResponse);
+  public Page<MachineResponse> findAll(Pageable pageable) {
+    return machineRepository.findAllActive(pageable)
+        .map(this::buildResponse);
   }
 
-  public MachineResponse findMachineById(Integer id) {
+  public MachineResponse findById(Integer id) {
     MachineEntity machineEntity = machineRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Masina nije pronadjena, id: " + id));
-    return buildMachineResponse(machineEntity);
+    return buildResponse(machineEntity);
   }
 
-  private MachineResponse buildMachineResponse(MachineEntity machineEntity) {
+  private MachineResponse buildResponse(MachineEntity machineEntity) {
     return MachineResponse.builder()
         .id(machineEntity.getId())
         .name(machineEntity.getName())
+        .isActive(machineEntity.isActive())
         .build();
   }
 
-  public MachineResponse createMachine(MachineRequest machineRequest) {
-    ensureMachineNameIsUnique(machineRequest.getName());
-    MachineEntity machineEntity = buildMachineEntity(machineRequest);
+  public MachineResponse create(MachineRequest machineRequest) {
+    ensureNameIsUnique(machineRequest.getName());
+    MachineEntity machineEntity = buildEntity(machineRequest);
     MachineEntity savedMachineEntity = machineRepository.save(machineEntity);
-    return buildMachineResponse(savedMachineEntity);
+    return buildResponse(savedMachineEntity);
   }
 
-  private void ensureMachineNameIsUnique(String name) {
+  private void ensureNameIsUnique(String name) {
     if (machineRepository.existsByName(name)) {
       throw new RuntimeException("Mašina sa imenom '" + name + "' već postoji");
     }
   }
 
-  private MachineEntity buildMachineEntity(MachineRequest request) {
+  private MachineEntity buildEntity(MachineRequest request) {
     MachineEntity machineEntity = new MachineEntity();
     machineEntity.setName(request.getName());
     return machineEntity;
   }
 
-  public MachineResponse updateMachine(Integer id, MachineRequest machineRequest) {
-    MachineEntity existingMachineEntity = findMachineByIdOrThrow(id);
-    ensureMachineNameIsUniqueForUpdate(existingMachineEntity, machineRequest.getName());
+  public MachineResponse update(Integer id, MachineRequest machineRequest) {
+    MachineEntity existingMachineEntity = findByIdOrThrow(id);
+    ensureNameIsUniqueForUpdate(existingMachineEntity, machineRequest.getName());
     existingMachineEntity.setName(machineRequest.getName());
     MachineEntity savedMachineEntity = machineRepository.save(existingMachineEntity);
-    return buildMachineResponse(savedMachineEntity);
+    return buildResponse(savedMachineEntity);
   }
 
-  private MachineEntity findMachineByIdOrThrow(Integer id) {
+  private MachineEntity findByIdOrThrow(Integer id) {
     return machineRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Mašina nije pronađena, id: " + id));
   }
 
-  private void ensureMachineNameIsUniqueForUpdate(MachineEntity existingMachineEntity, String newName) {
+  private void ensureNameIsUniqueForUpdate(MachineEntity existingMachineEntity, String newName) {
     if (!existingMachineEntity.getName().equals(newName) && machineRepository.existsByName(newName)) {
       throw new RuntimeException("Mašina sa imenom '" + newName + "' već postoji");
     }
   }
 
-  public void deleteMachine(Integer id) {
-    MachineEntity machineEntity = findMachineByIdOrThrow(id);
-    machineRepository.delete(machineEntity);
+  public void delete(Integer id) {
+    MachineEntity machineEntity = findByIdOrThrow(id);
+    machineEntity.setActive(false);
+    machineRepository.save(machineEntity);
   }
 }
