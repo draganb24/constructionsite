@@ -1,6 +1,7 @@
 package com.example.constructionsite.report.overburden_report.controller;
 
 import com.example.constructionsite.report.overburden_report.dto.request.OverburdenReportRequest;
+import com.example.constructionsite.report.overburden_report.dto.request.SearchReportQuery;
 import com.example.constructionsite.report.overburden_report.dto.response.OverburdenReportResponse;
 import com.example.constructionsite.report.overburden_report.service.OverburdenReportService;
 import jakarta.validation.Valid;
@@ -13,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reports/overburden")
@@ -25,17 +24,13 @@ public class OverburdenReportController {
 
   @GetMapping
   ResponseEntity<Page<OverburdenReportResponse>> getAll(
-      @RequestParam(required = false) LocalDate startDate,
-      @RequestParam(required = false) LocalDate endDate,
-      @RequestParam(required = false) Long machineId,
-      @RequestParam(required = false) Long workerId,
+      SearchReportQuery query,
       @PageableDefault(
           size = 10,
           sort = "reportDate",
           direction = Sort.Direction.DESC
       ) Pageable pageable) {
-    Page<OverburdenReportResponse> response = overburdenReportService.findWithFilters(startDate,
-        endDate, machineId, workerId, pageable);
+    Page<OverburdenReportResponse> response = overburdenReportService.findWithFilters(query, pageable);
     return ResponseEntity.ok(response);
   }
 

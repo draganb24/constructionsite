@@ -3,9 +3,11 @@ package com.example.constructionsite.report.overburden_report.service;
 import com.example.constructionsite.machine.entity.MachineEntity;
 import com.example.constructionsite.machine.repository.MachineRepository;
 import com.example.constructionsite.report.overburden_report.dto.request.OverburdenReportRequest;
+import com.example.constructionsite.report.overburden_report.dto.request.SearchReportQuery;
 import com.example.constructionsite.report.overburden_report.dto.response.OverburdenReportResponse;
 import com.example.constructionsite.report.overburden_report.entity.OverburdenReportEntity;
 import com.example.constructionsite.report.overburden_report.repository.OverburdenReportRepository;
+import com.example.constructionsite.report.overburden_report.specification.OverburdenReportFilterSpecification;
 import com.example.constructionsite.report.overburden_report_entry.dto.request.OverburdenReportEntryRequest;
 import com.example.constructionsite.report.overburden_report_entry.dto.response.OverburdenReportEntryResponse;
 import com.example.constructionsite.report.overburden_report_entry.entity.OverburdenReportEntryEntity;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,14 +36,14 @@ public class OverburdenReportService {
   private final MachineRepository machineRepository;
 
   public Page<OverburdenReportResponse> findWithFilters(
-      LocalDate startDate,
-      LocalDate endDate,
-      Long machineId,
-      Long workerId,
-      Pageable pageable) {
+      SearchReportQuery query,
+      Pageable pageable
+  ) {
 
-    return overburdenReportRepository
-        .findWithFilters(startDate, endDate, machineId, workerId, pageable)
+    return overburdenReportRepository.findAll(
+            new OverburdenReportFilterSpecification(query),
+            pageable
+        )
         .map(this::buildResponse);
   }
 
