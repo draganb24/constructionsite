@@ -17,59 +17,60 @@ public class WorkerService {
 
   private final WorkerRepository workerRepository;
 
-  public Page<WorkerResponse> findAllWorkers(Pageable pageable) {
-    return workerRepository.findAll(pageable)
-        .map(this::buildWorkerResponse);
+  public Page<WorkerResponse> findAll(Pageable pageable) {
+    return workerRepository.findAllActive(pageable)
+        .map(this::buildResponse);
   }
 
-  private WorkerResponse buildWorkerResponse(WorkerEntity workerEntity) {
+  private WorkerResponse buildResponse(WorkerEntity workerEntity) {
     return WorkerResponse.builder()
         .id(workerEntity.getId())
         .firstName(workerEntity.getFirstName())
         .lastName(workerEntity.getLastName())
+        .isActive(workerEntity.isActive())
         .build();
   }
 
-  public WorkerResponse findWorkerById(Integer id) {
-    WorkerEntity workerEntity = findWorkerByIdOrThrow(id);
-    return buildWorkerResponse(workerEntity);
+  public WorkerResponse findById(Integer id) {
+    WorkerEntity workerEntity = findByIdOrThrow(id);
+    return buildResponse(workerEntity);
   }
 
-  private WorkerEntity findWorkerByIdOrThrow(Integer id) {
+  private WorkerEntity findByIdOrThrow(Integer id) {
     return workerRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Radnik nije pronađen, id: " + id));
   }
 
-  public WorkerResponse createWorker(WorkerRequest workerRequest) {
-    ensureWorkerNameIsUnique(workerRequest.getFirstName(), workerRequest.getLastName());
-    WorkerEntity workerEntity = buildWorkerEntity(workerRequest);
+  public WorkerResponse create(WorkerRequest workerRequest) {
+    ensureNameIsUnique(workerRequest.getFirstName(), workerRequest.getLastName());
+    WorkerEntity workerEntity = buildEntity(workerRequest);
     WorkerEntity savedWorkerEntity = workerRepository.save(workerEntity);
-    return buildWorkerResponse(savedWorkerEntity);
+    return buildResponse(savedWorkerEntity);
   }
 
-  private void ensureWorkerNameIsUnique(String firstName, String lastName) {
+  private void ensureNameIsUnique(String firstName, String lastName) {
     if (workerRepository.existsByFirstNameAndLastName(firstName, lastName)) {
       throw new RuntimeException("Radnik '" + firstName + " " + lastName + "' već postoji");
     }
   }
 
-  private WorkerEntity buildWorkerEntity(WorkerRequest request) {
+  private WorkerEntity buildEntity(WorkerRequest request) {
     WorkerEntity workerEntity = new WorkerEntity();
     workerEntity.setFirstName(request.getFirstName());
     workerEntity.setLastName(request.getLastName());
     return workerEntity;
   }
 
-  public WorkerResponse updateWorker(Integer id, WorkerRequest workerRequest) {
-    WorkerEntity existingWorkerEntity = findWorkerByIdOrThrow(id);
-    ensureWorkerNameIsUniqueForUpdate(existingWorkerEntity, workerRequest.getFirstName(), workerRequest.getLastName());
+  public WorkerResponse update(Integer id, WorkerRequest workerRequest) {
+    WorkerEntity existingWorkerEntity = findByIdOrThrow(id);
+    ensureNameIsUniqueForUpdate(existingWorkerEntity, workerRequest.getFirstName(), workerRequest.getLastName());
     existingWorkerEntity.setFirstName(workerRequest.getFirstName());
     existingWorkerEntity.setLastName(workerRequest.getLastName());
     WorkerEntity savedWorkerEntity = workerRepository.save(existingWorkerEntity);
-    return buildWorkerResponse(savedWorkerEntity);
+    return buildResponse(savedWorkerEntity);
   }
 
-  private void ensureWorkerNameIsUniqueForUpdate(WorkerEntity existingWorkerEntity, String newFirstName, String newLastName) {
+  private void ensureNameIsUniqueForUpdate(WorkerEntity existingWorkerEntity, String newFirstName, String newLastName) {
     boolean nameChanged = !existingWorkerEntity.getFirstName().equals(newFirstName)
         || !existingWorkerEntity.getLastName().equals(newLastName);
     if (nameChanged && workerRepository.existsByFirstNameAndLastName(newFirstName, newLastName)) {
@@ -77,8 +78,9 @@ public class WorkerService {
     }
   }
 
-  public void deleteWorker(Integer id) {
-    WorkerEntity workerEntity = findWorkerByIdOrThrow(id);
-    workerRepository.delete(workerEntity);
+  public void delete(Integer id) {
+    WorkerEntity workerEntity = findByIdOrThrow(id);
+    workerEntity.setActive(false);
+    workerRepository.save(workerEntity);
   }
 }

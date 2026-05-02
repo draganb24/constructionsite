@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,30 +21,34 @@ public class WorkerController {
   private final WorkerService workerService;
 
   @GetMapping
-  public ResponseEntity<Page<WorkerResponse>> getAll(
+  ResponseEntity<Page<WorkerResponse>> getAll(
       @PageableDefault(size = 10, sort = "id") Pageable pageable) {
-    return ResponseEntity.ok(workerService.findAllWorkers(pageable));
+    Page<WorkerResponse> response = workerService.findAll(pageable);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<WorkerResponse> getById(@PathVariable Integer id) {
-    return ResponseEntity.ok(workerService.findWorkerById(id));
+  ResponseEntity<WorkerResponse> getById(@PathVariable Integer id) {
+    WorkerResponse response = workerService.findById(id);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
-  public ResponseEntity<WorkerResponse> create(@Valid @RequestBody WorkerRequest workerRequest) {
-    return ResponseEntity.ok(workerService.createWorker(workerRequest));
+  ResponseEntity<WorkerResponse> create(@Valid @RequestBody WorkerRequest workerRequest) {
+    WorkerResponse response = workerService.create(workerRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<WorkerResponse> update(@PathVariable Integer id,
-                                               @Valid @RequestBody WorkerRequest workerRequest) {
-    return ResponseEntity.ok(workerService.updateWorker(id, workerRequest));
+  ResponseEntity<WorkerResponse> update(@PathVariable Integer id,
+                                        @Valid @RequestBody WorkerRequest workerRequest) {
+    WorkerResponse response = workerService.update(id, workerRequest);
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Integer id) {
-    workerService.deleteWorker(id);
+  ResponseEntity<Void> delete(@PathVariable Integer id) {
+    workerService.delete(id);
     return ResponseEntity.noContent().build();
   }
 }
