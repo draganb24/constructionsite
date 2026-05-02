@@ -43,10 +43,10 @@ public class OverburdenReportService {
 
     return overburdenReportRepository
         .findWithFilters(startDate, endDate, machineId, workerId, pageable)
-        .map(this::buildOverburdenReportResponse);
+        .map(this::buildResponse);
   }
 
-  private OverburdenReportResponse buildOverburdenReportResponse(OverburdenReportEntity report) {
+  private OverburdenReportResponse buildResponse(OverburdenReportEntity report) {
     List<OverburdenReportEntryResponse> entryResponses = report.getEntries().stream()
         .map(this::buildOverburdenEntryResponse)
         .collect(Collectors.toList());
@@ -149,22 +149,22 @@ public class OverburdenReportService {
         .divide(tons, 4, RoundingMode.HALF_UP);
   }
 
-  public OverburdenReportResponse findOverburdenReportById(Integer id) {
-    OverburdenReportEntity overburdenReportEntity = findOverburdenReportByIdOrThrow(id);
-    return buildOverburdenReportResponse(overburdenReportEntity);
+  public OverburdenReportResponse findById(Integer id) {
+    OverburdenReportEntity overburdenReportEntity = findByIdOrThrow(id);
+    return buildResponse(overburdenReportEntity);
   }
 
-  private OverburdenReportEntity findOverburdenReportByIdOrThrow(Integer id) {
+  private OverburdenReportEntity findByIdOrThrow(Integer id) {
     return overburdenReportRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Izvještaj nije pronađen, id: " + id));
   }
 
-  public OverburdenReportResponse createOverburdenReport(OverburdenReportRequest overburdenReportRequest) {
-    OverburdenReportEntity overburdenReportEntity = buildOverburdenReportEntity(overburdenReportRequest);
-    return buildOverburdenReportResponse(overburdenReportRepository.save(overburdenReportEntity));
+  public OverburdenReportResponse create(OverburdenReportRequest overburdenReportRequest) {
+    OverburdenReportEntity overburdenReportEntity = buildEntity(overburdenReportRequest);
+    return buildResponse(overburdenReportRepository.save(overburdenReportEntity));
   }
 
-  private OverburdenReportEntity buildOverburdenReportEntity(OverburdenReportRequest overburdenReportRequest) {
+  private OverburdenReportEntity buildEntity(OverburdenReportRequest overburdenReportRequest) {
     OverburdenReportEntity report = new OverburdenReportEntity();
     report.setReportDate(overburdenReportRequest.getReportDate());
     report.setDescription(overburdenReportRequest.getDescription());
@@ -214,8 +214,8 @@ public class OverburdenReportService {
     return entry;
   }
 
-  public OverburdenReportResponse updateOverburdenReport(Integer id, OverburdenReportRequest request) {
-    OverburdenReportEntity existingOverburdenReportEntity = findOverburdenReportByIdOrThrow(id);
+  public OverburdenReportResponse update(Integer id, OverburdenReportRequest request) {
+    OverburdenReportEntity existingOverburdenReportEntity = findByIdOrThrow(id);
 
     existingOverburdenReportEntity.setReportDate(request.getReportDate());
     existingOverburdenReportEntity.setDescription(request.getDescription());
@@ -232,12 +232,11 @@ public class OverburdenReportService {
       );
     }
 
-    return buildOverburdenReportResponse(overburdenReportRepository.save(existingOverburdenReportEntity));
+    return buildResponse(overburdenReportRepository.save(existingOverburdenReportEntity));
   }
 
-  public void deleteOverburdenReport(Integer id) {
-    OverburdenReportEntity report = findOverburdenReportByIdOrThrow(id);
+  public void delete(Integer id) {
+    OverburdenReportEntity report = findByIdOrThrow(id);
     overburdenReportRepository.delete(report);
   }
-
 }

@@ -3,6 +3,7 @@ package com.example.constructionsite.report.overburden_report.repository;
 import com.example.constructionsite.report.overburden_report.entity.OverburdenReportEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,11 @@ import java.time.LocalDate;
 @Repository
 public interface OverburdenReportRepository extends JpaRepository<OverburdenReportEntity, Integer>,
     JpaSpecificationExecutor<OverburdenReportEntity> {
-
+  @EntityGraph(attributePaths = {
+      "entries",
+      "entries.machineEntity",
+      "entries.workerEntity"
+  })
   @Query("""
       SELECT r
       FROM OverburdenReportEntity r

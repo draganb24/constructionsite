@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class OverburdenReportController {
   private final OverburdenReportService overburdenReportService;
 
   @GetMapping
-  public ResponseEntity<Page<OverburdenReportResponse>> getAll(
+  ResponseEntity<Page<OverburdenReportResponse>> getAll(
       @RequestParam(required = false) LocalDate startDate,
       @RequestParam(required = false) LocalDate endDate,
       @RequestParam(required = false) Long machineId,
@@ -33,33 +34,34 @@ public class OverburdenReportController {
           sort = "reportDate",
           direction = Sort.Direction.DESC
       ) Pageable pageable) {
-
-    return ResponseEntity.ok(
-        overburdenReportService.findWithFilters(startDate, endDate, machineId, workerId, pageable)
-    );
+    Page<OverburdenReportResponse> response = overburdenReportService.findWithFilters(startDate,
+        endDate, machineId, workerId, pageable);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<OverburdenReportResponse> getById(@PathVariable Integer id) {
-    return ResponseEntity.ok(overburdenReportService.findOverburdenReportById(id));
+  ResponseEntity<OverburdenReportResponse> getById(@PathVariable Integer id) {
+    OverburdenReportResponse response = overburdenReportService.findById(id);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
-  public ResponseEntity<OverburdenReportResponse> create(
+  ResponseEntity<OverburdenReportResponse> create(
       @Valid @RequestBody OverburdenReportRequest overburdenReportRequest) {
-    return ResponseEntity.ok(overburdenReportService.createOverburdenReport(overburdenReportRequest));
+    OverburdenReportResponse response = overburdenReportService.create(overburdenReportRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<OverburdenReportResponse> update(@PathVariable Integer id,
-                                                         @Valid @RequestBody OverburdenReportRequest overburdenReportRequest) {
-    return ResponseEntity.ok(overburdenReportService.updateOverburdenReport(id, overburdenReportRequest));
+  ResponseEntity<OverburdenReportResponse> update(@PathVariable Integer id,
+                                                  @Valid @RequestBody OverburdenReportRequest overburdenReportRequest) {
+    OverburdenReportResponse response = overburdenReportService.update(id, overburdenReportRequest);
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Integer id) {
-    overburdenReportService.deleteOverburdenReport(id);
+  ResponseEntity<Void> delete(@PathVariable Integer id) {
+    overburdenReportService.delete(id);
     return ResponseEntity.noContent().build();
   }
-
 }
