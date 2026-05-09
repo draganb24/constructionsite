@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class MachineRequest {
+public class CreateMachineRequest {
   @NotBlank(message = "Ime masine je obavezno")
   private String name;
 }
