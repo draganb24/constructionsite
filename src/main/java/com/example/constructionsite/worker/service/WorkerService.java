@@ -1,7 +1,5 @@
 package com.example.constructionsite.worker.service;
 
-import com.example.constructionsite.worker.dto.request.WorkerRequest;
-import com.example.constructionsite.worker.dto.response.WorkerResponse;
 import com.example.constructionsite.worker.entity.WorkerEntity;
 import com.example.constructionsite.worker.repository.WorkerRepository;
 import jakarta.transaction.Transactional;
@@ -17,35 +15,38 @@ public class WorkerService {
 
   private final WorkerRepository workerRepository;
 
-  public Page<WorkerResponse> findAll(Pageable pageable) {
-    return workerRepository.findAllActive(pageable)
-        .map(this::buildResponse);
+  public Page<WorkerEntity> findAll(Pageable pageable) {
+    return workerRepository.findAllActive(pageable);
   }
 
-  private WorkerResponse buildResponse(WorkerEntity workerEntity) {
-    return WorkerResponse.builder()
-        .id(workerEntity.getId())
-        .firstName(workerEntity.getFirstName())
-        .lastName(workerEntity.getLastName())
-        .isActive(workerEntity.isActive())
-        .build();
+  public WorkerEntity findById(Integer id) {
+    return findByIdOrThrow(id);
   }
 
-  public WorkerResponse findById(Integer id) {
+  public WorkerEntity create(WorkerEntity workerEntity) {
+    ensureNameIsUnique(workerEntity.getFirstName(), workerEntity.getLastName());
+
+    return workerRepository.save(workerEntity);
+  }
+
+  public WorkerEntity update(Integer id, WorkerEntity updatedEntity) {
+    WorkerEntity existingEntity = findByIdOrThrow(id);
+    ensureNameIsUniqueForUpdate(existingEntity, updatedEntity.getFirstName(),
+        updatedEntity.getLastName());
+    existingEntity.setFirstName(updatedEntity.getFirstName());
+    existingEntity.setLastName(updatedEntity.getLastName());
+
+    return workerRepository.save(existingEntity);
+  }
+
+  public void delete(Integer id) {
     WorkerEntity workerEntity = findByIdOrThrow(id);
-    return buildResponse(workerEntity);
+    workerEntity.setActive(false);
   }
 
   private WorkerEntity findByIdOrThrow(Integer id) {
-    return workerRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Radnik nije pronađen, id: " + id));
-  }
-
-  public WorkerResponse create(WorkerRequest workerRequest) {
-    ensureNameIsUnique(workerRequest.getFirstName(), workerRequest.getLastName());
-    WorkerEntity workerEntity = buildEntity(workerRequest);
-    WorkerEntity savedWorkerEntity = workerRepository.save(workerEntity);
-    return buildResponse(savedWorkerEntity);
+    return workerRepository.findById(id).orElseThrow(() ->
+        new RuntimeException("Radnik nije pronađen, id: " + id));
   }
 
   private void ensureNameIsUnique(String firstName, String lastName) {
@@ -54,33 +55,14 @@ public class WorkerService {
     }
   }
 
-  private WorkerEntity buildEntity(WorkerRequest request) {
-    WorkerEntity workerEntity = new WorkerEntity();
-    workerEntity.setFirstName(request.getFirstName());
-    workerEntity.setLastName(request.getLastName());
-    return workerEntity;
-  }
+  private void ensureNameIsUniqueForUpdate(WorkerEntity existingEntity, String newFirstName,
+                                           String newLastName) {
 
-  public WorkerResponse update(Integer id, WorkerRequest workerRequest) {
-    WorkerEntity existingWorkerEntity = findByIdOrThrow(id);
-    ensureNameIsUniqueForUpdate(existingWorkerEntity, workerRequest.getFirstName(), workerRequest.getLastName());
-    existingWorkerEntity.setFirstName(workerRequest.getFirstName());
-    existingWorkerEntity.setLastName(workerRequest.getLastName());
-    WorkerEntity savedWorkerEntity = workerRepository.save(existingWorkerEntity);
-    return buildResponse(savedWorkerEntity);
-  }
+    boolean nameChanged = !existingEntity.getFirstName().equals(newFirstName)
+        || !existingEntity.getLastName().equals(newLastName);
 
-  private void ensureNameIsUniqueForUpdate(WorkerEntity existingWorkerEntity, String newFirstName, String newLastName) {
-    boolean nameChanged = !existingWorkerEntity.getFirstName().equals(newFirstName)
-        || !existingWorkerEntity.getLastName().equals(newLastName);
     if (nameChanged && workerRepository.existsByFirstNameAndLastName(newFirstName, newLastName)) {
       throw new RuntimeException("Radnik '" + newFirstName + " " + newLastName + "' već postoji");
     }
-  }
-
-  public void delete(Integer id) {
-    WorkerEntity workerEntity = findByIdOrThrow(id);
-    workerEntity.setActive(false);
-    workerRepository.save(workerEntity);
   }
 }

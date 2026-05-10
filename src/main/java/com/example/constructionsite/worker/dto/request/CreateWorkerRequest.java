@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class WorkerRequest {
+public class CreateWorkerRequest {
   @NotBlank(message = "Ime je obavezno")
   private String firstName;
 
