@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 
 @Data
-public class OverburdenReportEntryRequest {
+public class CreateOverburdenReportEntryRequest {
   private Integer workerId;
   private Integer machineId;
   private Integer tripCount;

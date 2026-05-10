@@ -28,7 +28,7 @@ public class OverburdenReportEntity {
   @Column(name = "report_date", nullable = false)
   private LocalDate reportDate;
 
-  @Column(name = "description", length = 255)
+  @Column(name = "description")
   private String description;
 
   @Column(name = "note", length = 500)
@@ -37,4 +37,9 @@ public class OverburdenReportEntity {
   @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private List<OverburdenReportEntryEntity> entries = new ArrayList<>();
+
+  public void addEntry(OverburdenReportEntryEntity entry) {
+    entry.setReport(this);
+    this.entries.add(entry);
+  }
 }
