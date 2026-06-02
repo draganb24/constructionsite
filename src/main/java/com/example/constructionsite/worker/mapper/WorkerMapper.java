@@ -12,12 +12,11 @@ import org.mapstruct.*;
 )
 public interface WorkerMapper {
 
-  @Mapping(target = "active", constant = "true")
+  @Mapping(target = "isActive", constant = "true")
   WorkerEntity fromCreateRequestToEntity(CreateWorkerRequest request);
 
   void updateEntityFromUpdateRequest(UpdateWorkerRequest request,
                                      @MappingTarget WorkerEntity entity);
 
-  @Mapping(target = "isActive", source = "active")
   WorkerResponse fromEntityToResponse(WorkerEntity entity);
 }

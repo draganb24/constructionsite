@@ -42,7 +42,7 @@ public class MachineService {
   @Transactional
   public void delete(Integer id) {
     MachineEntity machineEntity = findByIdOrThrow(id);
-    machineEntity.setActive(false);
+    machineEntity.setIsActive(false);
   }
 
   private MachineEntity findByIdOrThrow(Integer id) {

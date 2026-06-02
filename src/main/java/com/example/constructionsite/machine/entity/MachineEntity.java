@@ -29,5 +29,5 @@ public class MachineEntity {
   private String name;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true;
+  private Boolean isActive = true;
 }

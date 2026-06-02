@@ -41,7 +41,7 @@ public class WorkerService {
 
   public void delete(Integer id) {
     WorkerEntity workerEntity = findByIdOrThrow(id);
-    workerEntity.setActive(false);
+    workerEntity.setIsActive(false);
   }
 
   private WorkerEntity findByIdOrThrow(Integer id) {

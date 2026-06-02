@@ -12,12 +12,11 @@ import org.mapstruct.*;
 )
 public interface MachineMapper {
 
-  @Mapping(target = "active", constant = "true")
+  @Mapping(target = "isActive", constant = "true")
   MachineEntity fromCreateRequestToEntity(CreateMachineRequest request);
 
   void updateEntityFromUpdateRequest(UpdateMachineRequest request,
                                @MappingTarget MachineEntity entity);
 
-  @Mapping(target = "isActive", source = "active")
   MachineResponse fromEntityToResponse(MachineEntity entity);
 }

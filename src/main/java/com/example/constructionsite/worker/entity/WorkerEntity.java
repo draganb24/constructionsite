@@ -36,7 +36,7 @@ public class WorkerEntity {
   private String lastName;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true;
+  private Boolean isActive = true;
 
   public String getFullName() {
     return Stream.of(firstName, lastName)
