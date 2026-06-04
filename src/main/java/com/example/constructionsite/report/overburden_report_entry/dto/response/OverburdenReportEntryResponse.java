@@ -17,18 +17,18 @@ public class OverburdenReportEntryResponse {
   private String machineName;
   private Integer tripCount;
   private BigDecimal kilometers;
-  private BigDecimal machineHours;
+  private String machineHours;
   private BigDecimal fuelConsumption;
   private BigDecimal tons;
   private BigDecimal kmPerTone;
-  private BigDecimal mhPerTone;
+  private String mhPerTone;
   private String stdRange;
   private String note;
   @JsonFormat(pattern = "HH:mm")
   private LocalTime startWorkTime;
   @JsonFormat(pattern = "HH:mm")
   private LocalTime endWorkTime;
-  private Long totalWorkTime;
+  private String totalWorkTime;
   @JsonFormat(pattern = "HH:mm")
   private LocalTime startWorkTimeGPRS;
   @JsonFormat(pattern = "HH:mm")
